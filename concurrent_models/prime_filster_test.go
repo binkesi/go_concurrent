@@ -3,6 +3,7 @@ package concurrentmodels
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestPrimeFilter(t *testing.T) {
@@ -23,10 +24,28 @@ func TestRandomNum(t *testing.T) {
 			case ch <- 1:
 			}
 		}
+		close(ch)
 	}()
-	go func() {
-		for in := range ch {
-			fmt.Println(in)
+	for in := range ch {
+		fmt.Println(in)
+	}
+}
+
+func Worker(cancel chan bool) {
+	for {
+		select {
+		default:
+			time.Sleep(time.Second)
+			fmt.Println("Hello world!")
+		case <-cancel:
+			return
 		}
-	}()
+	}
+}
+
+func TestCancel(t *testing.T) {
+	ch := make(chan bool)
+	go Worker(ch)
+	time.Sleep(4 * time.Second)
+	ch <- true
 }
