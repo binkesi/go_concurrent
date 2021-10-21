@@ -2,6 +2,7 @@ package concurrentmodels
 
 import (
 	"fmt"
+	"sync"
 	"testing"
 	"time"
 )
@@ -31,7 +32,8 @@ func TestRandomNum(t *testing.T) {
 	}
 }
 
-func Worker(cancel chan bool) {
+func Worker(wg *sync.WaitGroup, cancel chan bool) {
+	defer wg.Done()
 	for {
 		select {
 		default:
@@ -45,7 +47,12 @@ func Worker(cancel chan bool) {
 
 func TestCancel(t *testing.T) {
 	ch := make(chan bool)
-	go Worker(ch)
-	time.Sleep(4 * time.Second)
-	ch <- true
+	wg := new(sync.WaitGroup)
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go Worker(wg, ch)
+	}
+	time.Sleep(3 * time.Second)
+	close(ch)
+	wg.Wait()
 }
