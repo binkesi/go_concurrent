@@ -13,3 +13,20 @@ func TestPrimeFilter(t *testing.T) {
 		ch = PrimeFilter(ch, prime)
 	}
 }
+
+func TestRandomNum(t *testing.T) {
+	ch := make(chan int)
+	go func() {
+		for i := 0; i < 10; i++ {
+			select {
+			case ch <- 0:
+			case ch <- 1:
+			}
+		}
+	}()
+	go func() {
+		for in := range ch {
+			fmt.Println(in)
+		}
+	}()
+}
