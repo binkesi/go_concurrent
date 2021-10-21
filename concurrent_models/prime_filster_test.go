@@ -32,7 +32,7 @@ func TestRandomNum(t *testing.T) {
 	}
 }
 
-func Worker(wg *sync.WaitGroup, cancel chan bool) {
+func Worker(wg *sync.WaitGroup, cancel chan interface{}) {
 	defer wg.Done()
 	for {
 		select {
@@ -46,7 +46,7 @@ func Worker(wg *sync.WaitGroup, cancel chan bool) {
 }
 
 func TestCancel(t *testing.T) {
-	ch := make(chan bool)
+	ch := make(chan interface{})
 	wg := new(sync.WaitGroup)
 	for i := 0; i < 10; i++ {
 		wg.Add(1)
