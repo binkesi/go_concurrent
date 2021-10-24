@@ -1,4 +1,4 @@
-package concurrentmodels
+package concurrent_models
 
 import (
 	"context"

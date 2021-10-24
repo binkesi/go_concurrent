@@ -1,4 +1,6 @@
-package concurrentmodels
+package concurrent_models
+
+import "time"
 
 func GenerateNum() chan int {
 	ch := make(chan int)
@@ -20,4 +22,13 @@ func PrimeFilter(in <-chan int, prime int) chan int {
 		}
 	}()
 	return out
+}
+
+var Done = false
+var A string
+
+func Setup() {
+	A = "Hello world"
+	time.Sleep(time.Second)
+	Done = true
 }
